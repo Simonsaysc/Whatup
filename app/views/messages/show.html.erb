@@ -1,0 +1,15 @@
+<% model_class = @message.class %>
+<% model_name_human = model_class.model_name.human %>
+
+<h1><%= model_name_human %> Details</h1>
+
+<dl>
+  <% model_class.attribute_names.each do |attr_name| %>
+    <dt><strong><%= attr_name.humanize %>:</strong></dt>
+    <dd><%= @message.send(attr_name) %></dd> 
+  <% end %>
+</dl>
+
+<div>
+  <%= link_to "Back to #{model_name_human.pluralize.downcase}", polymorphic_path(model_class) %> 
+</div>

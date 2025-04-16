@@ -1,0 +1,24 @@
+<% model_class = @users.klass %>
+<h1><%= model_class.model_name.human.pluralize %></h1>
+  <table>
+    <thead>
+      <tr>
+        <% model_class.attribute_names.each do |attr_name| %>
+          <th><%= attr_name.humanize %></th>
+        <% end %>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <% model_class.attribute_names.each do |attr_name| %>
+            <td><%= user.send(attr_name) %></td>
+          <% end %>
+          <td>
+            <%= link_to 'Show', user %>
+            </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
