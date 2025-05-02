@@ -1,0 +1,29 @@
+<%# Pass users collection to the partial %>
+<%= form_with(model: chat, local: true) do |form| %>
+  <% if chat.errors.any? %>
+    <div id="error_explanation" style="color: red;">
+      <h2><%= pluralize(chat.errors.count, "error") %> prohibited this chat from being saved:</h2>
+      <ul>
+        <% chat.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :sender_id %>
+    <%# collection_select(object_name, method, collection, value_method, text_method, options = {}, html_options = {}) %>
+    <%= form.collection_select :sender_id, users, :id, :display_name, { prompt: 'Select Sender' } %>
+    <%# Using the display_name helper method we added to User model %>
+  </div>
+
+  <div class="field">
+    <%= form.label :receiver_id %>
+    <%= form.collection_select :receiver_id, users, :id, :display_name, { prompt: 'Select Receiver' } %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

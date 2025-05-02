@@ -1,5 +1,6 @@
 <% model_class = @messages.klass %>
 <h1><%= model_class.model_name.human.pluralize %></h1>
+<%= link_to "New Message", new_message_path %>
   <table>
     <thead>
       <tr>

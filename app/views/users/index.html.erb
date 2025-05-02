@@ -1,5 +1,6 @@
 <% model_class = @users.klass %>
 <h1><%= model_class.model_name.human.pluralize %></h1>
+<%= link_to "New User", new_user_path %>
   <table>
     <thead>
       <tr>
