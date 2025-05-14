@@ -9,7 +9,11 @@
     <dd><%= @chat.send(attr_name) %></dd> 
   <% end %>
 </dl>
-
-<div>
-  <%= link_to "Back to #{model_name_human.pluralize.downcase}", polymorphic_path(model_class) %> 
-</div>
+<ul class = "list-group">
+  <%@chat_messages.each do |message| %>
+  <li class = "list-group-item">
+    <%= message.body%>
+  <%end%>
+  </ul>
+<%= link_to "Edit #{model_name_human}", edit_chat_path(@chat), class: 'btn btn-primary' %>
+  <%= link_to "Back to All #{model_name_human.pluralize}", chats_path, class: 'btn btn-secondary' %>

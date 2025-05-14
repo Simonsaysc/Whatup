@@ -1,15 +1,71 @@
 <% model_class = @user.class %>
 <% model_name_human = model_class.model_name.human %>
 
-<h1><%= model_name_human %> Details</h1>
+<h1><%= @user.full_name %> - Details</h1>
 
-<dl>
-  <% model_class.attribute_names.each do |attr_name| %>
+<dl class="dl-horizontal"> 
+  <% (model_class.attribute_names - ['encrypted_password', 'reset_password_token', 'reset_password_sent_at', 'remember_created_at', 'created_at', 'updated_at']).each do |attr_name| %>
+    <% value = @user.send(attr_name) %>
+    <% next if value.blank? && attr_name != 'id' %>
     <dt><strong><%= attr_name.humanize %>:</strong></dt>
-    <dd><%= @user.send(attr_name) %></dd> 
+    <dd><%= value %></dd>
   <% end %>
+  <dt><strong>Created At:</strong></dt>
+  <dd><%= time_ago_in_words(@user.created_at) %> ago</dd>
+  <dt><strong>Updated At:</strong></dt>
+  <dd><%= time_ago_in_words(@user.updated_at) %> ago</dd>
 </dl>
 
+<hr>
+<h2>Chats Involving <%= @user.first_name %></h2>
+<% if @user_chats.any? %>
+  <ul class="list-group">
+    <% @user_chats.each do |chat| %>
+      <li class="list-group-item">
+        <%= link_to chat.display_name, chat_path(chat) %>
+        <% if chat.respond_to?(:users) && chat.users.count > 1 %>
+          <small>(With: <%= (chat.users.to_a - [@user]).map(&:full_name).to_sentence %>)</small>
+        <% end %>
+        <br>
+        <small>Last activity: <%= time_ago_in_words(chat.updated_at) %> ago</small>
+        <% if chat.messages.any? %>
+          <br>
+          <small>Last message: <em><%= truncate(chat.messages.last.body, length: 50) %></em>
+            By <%= chat.messages.last.user.try(:first_name) || "User##{chat.messages.last.user_id}" %>
+          </small>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p><%= @user.first_name %> is not part of any chats yet.</p>
+<% end %>
+
+<hr>
+
+<h2>Messages Sent by <%= @user.first_name %></h2>
+<% if @user_messages.any? %>
+  <ul class="list-group">
+    <% @user_messages.each do |message| %>
+      <li class="list-group-item">
+        <p>
+          <small>
+            Sent <%= time_ago_in_words(message.created_at) %> ago
+            in <%= link_to message.chat.display_name, chat_path(message.chat) %>
+            <br>
+            <%= message.body%>
+          </small>
+        </p>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p><%= @user.first_name %> has not sent any messages yet.</p>
+<% end %>
+
+<hr>
+
 <div>
-  <%= link_to "Back to #{model_name_human.pluralize.downcase}", polymorphic_path(model_class) %> 
+  <%= link_to "Edit #{model_name_human}", edit_user_path(@user), class: 'btn btn-primary' %>
+  <%= link_to "Back to All #{model_name_human.pluralize}", users_path, class: 'btn btn-secondary' %>
 </div>

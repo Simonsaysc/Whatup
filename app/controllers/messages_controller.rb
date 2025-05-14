@@ -5,7 +5,7 @@ class MessagesController < ApplicationController
   end
   def show
   end
-  before_action :load_chats_and_users, only: [ :new, :create ]
+  before_action :load_chats_and_users, only: [ :new, :create, :update, :edit ]
   def new
     @message = Message.new
   end
@@ -20,7 +20,7 @@ class MessagesController < ApplicationController
   def edit
   end
   def update
-    if @message.update(messages_params)
+    if @message.update(message_params)
       redirect_to messages_path
     else
       render :edit, status: :unprocessable_entity

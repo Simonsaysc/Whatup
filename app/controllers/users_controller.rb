@@ -4,6 +4,8 @@ class UsersController < ApplicationController
     @users = User.all
   end
   def show
+    @user_chats = @user.all_chats.includes(:sender, :receiver, :messages).order(updated_at: :desc)
+    @user_messages = @user.messages.includes(:chat).order(created_at: :desc)
   end
 
   def new
