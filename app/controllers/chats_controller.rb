@@ -4,7 +4,7 @@ class ChatsController < ApplicationController
     @chats = Chat.all
   end
   def show
-    @chat_messages = @chat.messages.order(created_at: :asc)
+    @chat_messages = @chat.messages.includes(:user).order(created_at: :asc)
   end
   before_action :load_users, only: [ :new, :create, :update, :edit ]
   def new

@@ -10,10 +10,13 @@
   <% end %>
 </dl>
 <ul class = "list-group">
-  <%@chat_messages.each do |message| %>
-  <li class = "list-group-item">
-    <%= message.body%>
-  <%end%>
-  </ul>
+  <li>
+    <%@chat_messages.each do |message| %>
+    <strong><%= message.user.try(:first_name) || "User ##{message.user_id}" %>:</strong>
+          <%= sanitize(message.body) %> 
+          <br>
+    <%end%>
+  </li>
+</ul>
 <%= link_to "Edit #{model_name_human}", edit_chat_path(@chat), class: 'btn btn-primary' %>
   <%= link_to "Back to All #{model_name_human.pluralize}", chats_path, class: 'btn btn-secondary' %>
