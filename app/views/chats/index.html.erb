@@ -18,7 +18,12 @@
           <% end %>
           <td>
             <%= link_to 'Show', chat %>
-            <%= link_to 'Edit', edit_chat_path(chat) %>
+            <%if can? :edit, chat%>
+              <%= link_to 'Edit', edit_chat_path(chat) %>
+            <%end%>
+            <%if can? :delete, chat%>
+              <%= button_to 'Delete', delete_chat_path(chat) %>
+            <%end%>
             </td>
         </tr>
       <% end %>

@@ -18,7 +18,13 @@
           <% end %>
           <td>
             <%= link_to 'Show', message %>
-            <%= link_to 'Edit', edit_message_path(message) %>
+            <%if can? :edit, message%>
+              <%= link_to 'Edit', edit_message_path(message) %>
+            <%end%>
+            <%if can? :delete, message%>
+              <%= button_to "Delete", message_path(message), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } },
+                class: "btn btn-outline-danger btn-sm" %>
+            <%end%>
             </td>
         </tr>
       <% end %>

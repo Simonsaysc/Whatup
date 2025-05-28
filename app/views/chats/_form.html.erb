@@ -1,29 +1,25 @@
-<%# Pass users collection to the partial %>
-<%= form_with(model: chat, local: true) do |form| %>
+<%= form_with(model: chat, local: true) do |form| %> 
   <% if chat.errors.any? %>
-    <div id="error_explanation" style="color: red;">
+    <div style="color: red">
       <h2><%= pluralize(chat.errors.count, "error") %> prohibited this chat from being saved:</h2>
       <ul>
-        <% chat.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
+        <% chat.errors.each do |error| %>
+          <li><%= error.full_message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :sender_id %>
-    <%# collection_select(object_name, method, collection, value_method, text_method, options = {}, html_options = {}) %>
-    <%= form.collection_select :sender_id, users, :id, :display_name, { prompt: 'Select Sender' } %>
-    <%# Using the display_name helper method we added to User model %>
+  <div class="field mb-3"> 
+    <%= form.label :receiver_id, class: "form-label" %>
+    <%= form.collection_select :receiver_id, @users, :id, :display_name, { prompt: 'Select Receiver' }, { class: "form-select" } %>
   </div>
 
-  <div class="field">
-    <%= form.label :receiver_id %>
-    <%= form.collection_select :receiver_id, users, :id, :display_name, { prompt: 'Select Receiver' } %>
+  <div class="field mb-3">
+    <%= form.text_area :initial_message_content, class: "form-control" %>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>

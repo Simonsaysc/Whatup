@@ -1,22 +1,14 @@
-<% model_class = @chat.class %>
-<% model_name_human = model_class.model_name.human %>
-
-<h1><%= model_name_human %> Details</h1>
-
-<dl>
-  <% model_class.attribute_names.each do |attr_name| %>
-    <dt><strong><%= attr_name.humanize %>:</strong></dt>
-    <dd><%= @chat.send(attr_name) %></dd> 
+<ul class="list-group">
+  <% @messages.each do |message| %>
+    <li class="list-group-item"> <%# Added list-group-item for Bootstrap styling %>
+      <strong><%= message.user.try(:display_name) || message.user.try(:email) || "User ##{message.user_id}" %>:</strong>
+      <%= sanitize(message.body) %> <%# Assuming message content is in 'content' or 'body' %>
+      <br>
+      <small class="text-muted"><%= time_ago_in_words(message.created_at) %> ago</small>
+    </li>
   <% end %>
-</dl>
-<ul class = "list-group">
-  <li>
-    <%@chat_messages.each do |message| %>
-    <strong><%= message.user.try(:first_name) || "User ##{message.user_id}" %>:</strong>
-          <%= sanitize(message.body) %> 
-          <br>
-    <%end%>
-  </li>
+  <% if @messages.empty? %>
+    <li class="list-group-item">No messages in this chat yet.</li>
+  <% end %>
 </ul>
-<%= link_to "Edit #{model_name_human}", edit_chat_path(@chat), class: 'btn btn-primary' %>
-  <%= link_to "Back to All #{model_name_human.pluralize}", chats_path, class: 'btn btn-secondary' %>
+<%= link_to 'Back to Chats', chats_path %>

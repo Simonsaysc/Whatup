@@ -1,43 +1,59 @@
+# app/controllers/chats_controller.rb
 class ChatsController < ApplicationController
-  before_action :set_chat, only: [ :show, :edit, :update ]
+  before_action :authenticate_user!
+  load_and_authorize_resource
+
   def index
     @chats = Chat.all
   end
   def show
-    @chat_messages = @chat.messages.includes(:user).order(created_at: :asc)
+    unless @chat
+      Rails.logger.error "ChatsController#show: @chat is nil for params: #{params.inspect}"
+      @messages = []
+    else
+      @messages = @chat.messages.order(created_at: :asc)
+    end
+
+    @new_message = @chat ? @chat.messages.build : Message.new
   end
-  before_action :load_users, only: [ :new, :create, :update, :edit ]
+
   def new
-    @chat = Chat.new
+    @users = User.where.not(id: current_user.id).order(:first_name, :last_name)
   end
+
   def create
     @chat = Chat.new(chat_params)
+    @chat.sender = current_user
+
     if @chat.save
-      redirect_to chats_path, notice: "Chat between #{@chat.sender.display_name} and #{@chat.receiver.display_name} created."
+      redirect_to chats_path, notice: "Chat was successfully started."
     else
+      @users = User.where.not(id: current_user.id).order(:first_name, :last_name)
       render :new, status: :unprocessable_entity
     end
   end
+
   def edit
+    @users = User.where.not(id: current_user.id).order(:first_name, :last_name)
   end
+
   def update
-    if @chat.update(chat_params)
-      redirect_to chats_path
+    if @chat.update(chat_params_for_update)
+      redirect_to chats_path, notice: "Chat was successfully updated."
     else
+      @users = User.where.not(id: current_user.id).order(:first_name, :last_name)
       render :edit, status: :unprocessable_entity
     end
   end
+
+  def destroy
+    @chat.destroy
+    redirect_to chats_path
+  end
+
   private
 
-  def set_chat
-    @chat = Chat.find(params[:id])
-  end
-
   def chat_params
-    params.require(:chat).permit(:sender_id, :receiver_id)
-  end
-
-  def load_users
-    @users = User.all.order(:last_name, :first_name)
+    params.require(:chat).permit(:receiver_id)
   end
 end

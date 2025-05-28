@@ -1,5 +1,7 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: [ :show, :edit, :update ]
+  before_action :set_message, only: [ :show, :edit, :update, :destroy ]
+  before_action :authenticate_user!
+  load_and_authorize_resource
   def index
     @messages = Message.all
   end
@@ -25,6 +27,10 @@ class MessagesController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
+  end
+  def destroy
+    @message.destroy
+    redirect_to messages_path
   end
 
   private
