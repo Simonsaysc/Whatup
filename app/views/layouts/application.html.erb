@@ -27,9 +27,6 @@
             <li class="nav-item">
               <%= link_to "Messages", messages_path, class: "nav-link #{'active' if current_page?(messages_path)}" %>
             </li>
-            <li class="nav-item">
-              <%= link_to "Chats", chats_path, class: "nav-link #{'active' if current_page?(chats_path)}" %>
-            </li>
           </ul>
           
         <ul class="navbar-nav"> 
@@ -39,6 +36,9 @@
                   Hello, <%= current_user.email %>
                 </span>
               </li>
+            <li class="nav-item">
+              <%= link_to "My Inbox", chats_path, class: "nav-link #{'active' if current_page?(chats_path)}" %>
+            </li>
               <li class="nav-item">
                 <%= link_to "Edit Profile", edit_user_registration_path, class: "nav-link #{'active' if current_page?(edit_user_registration_path)}" %>
               </li>

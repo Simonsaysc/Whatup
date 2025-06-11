@@ -1,30 +1,36 @@
+<%# app/views/chats/index.html.erb %>
+
 <% model_class = @chats.klass %>
 <%= link_to "New Chat", new_chat_path %>
-<h1><%= model_class.model_name.human.pluralize %></h1>
+
+<h1>Chats</h1>
   <table>
     <thead>
       <tr>
-        <% model_class.attribute_names.each do |attr_name| %>
-          <th><%= attr_name.humanize %></th>
-        <% end %>
+        <th>Chat</th>
+        <th>Created At</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <% @chats.each do |chat| %>
         <tr>
-          <% model_class.attribute_names.each do |attr_name| %>
-            <td><%= chat.send(attr_name) %></td>
-          <% end %>
+          <%# Use the display_name method from your Chat model %>
+          <td><%= chat.display_name %></td>
+
+          <%# It's good practice to show when the chat started %>
+          <td><%= chat.created_at.to_fs(:short) %></td>
+
           <td>
             <%= link_to 'Show', chat %>
-            <%if can? :edit, chat%>
+            <% if can? :edit, chat %>
               <%= link_to 'Edit', edit_chat_path(chat) %>
-            <%end%>
-            <%if can? :delete, chat%>
-              <%= button_to 'Delete', delete_chat_path(chat) %>
-            <%end%>
-            </td>
+            <% end %>
+            <% if can? :destroy, chat %>
+              <%= button_to 'Delete', chat_path(chat), method: :delete, form: { data: { turbo_confirm: "Are you sure?" }},
+              class: "btn btn-outline-danger btn-sm" %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>

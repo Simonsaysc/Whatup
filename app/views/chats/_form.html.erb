@@ -15,10 +15,6 @@
     <%= form.collection_select :receiver_id, @users, :id, :display_name, { prompt: 'Select Receiver' }, { class: "form-select" } %>
   </div>
 
-  <div class="field mb-3">
-    <%= form.text_area :initial_message_content, class: "form-control" %>
-  </div>
-
   <div class="actions">
     <%= form.submit class: "btn btn-primary" %>
   </div>

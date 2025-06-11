@@ -11,7 +11,13 @@ class Ability
     can :create, Message
     can [ :update, :destroy ], Message, user_id: user.id
     can :new, Chat
-    can [ :create, :update, :destroy ], Chat, sender_id: user.id
+    can :read, Chat, [ "sender_id = :user_id OR receiver_id = :user_id", { user_id: user.id } ] do |chat|
+      chat.sender_id == user.id || chat.receiver_id == user.id
+    end
+    can :destroy, Chat, [ "sender_id = :user_id OR receiver_id = :user_id", { user_id: user.id } ] do |chat|
+      chat.sender_id == user.id || chat.receiver_id == user.id
+    end
+    can [ :create, :update ], Chat, sender_id: user.id
     #   can :read, :all
     #   return unless user.admin?
     #   can :manage, :all
